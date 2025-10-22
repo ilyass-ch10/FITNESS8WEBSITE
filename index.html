@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FitPlan - Programme & Nutrition</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="#">🏋️‍♂️ FitPlan</a>
+      <p class="subtitle">Ton coach forme & alimentation</p>
+    </div>
+  </header>
+
+  <!-- SECTION HERO AVEC IMAGE -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Transforme ton corps, un jour à la fois 💪</h1>
+      <p>Entre ton poids, ta taille et ton objectif pour recevoir ton plan d’entraînement et nutrition personnalisé.</p>
+    </div>
+    <img src="images/hero.jpg" alt="Fitness" class="hero-img" />
+  </section>
+
+  <main class="container">
+    <section class="card">
+      <h2>Entre tes informations</h2>
+      <form id="userForm">
+        <div class="row">
+          <label>Poids (kg)
+            <input type="number" id="weight" required min="20" max="300" step="0.1" placeholder="Ex : 70" />
+          </label>
+          <label>Taille (cm)
+            <input type="number" id="height" required min="90" max="250" step="0.1" placeholder="Ex : 175" />
+          </label>
+        </div>
+
+        <div class="row">
+          <label>Âge
+            <input type="number" id="age" required min="13" max="100" value="25" />
+          </label>
+          <label>Sexe
+            <select id="sex">
+              <option value="male">Homme</option>
+              <option value="female">Femme</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="row">
+          <label>Nombre d'entraînements / semaine
+            <input type="number" id="sessions" required min="1" max="7" value="3" />
+          </label>
+          <label>Objectif
+            <select id="goal">
+              <option value="maintain">Maintenir</option>
+              <option value="lose">Perdre du poids</option>
+              <option value="gain">Prendre du muscle</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn">Calculer</button>
+          <button type="reset" class="btn ghost">Effacer</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="results" class="card hidden">
+      <h2>Résultats personnalisés</h2>
+      <div id="summary"></div>
+
+      <h3>Programme d’entraînement</h3>
+      <img src="images/workout.jpg" alt="Entraînement" class="section-img" />
+      <div id="workoutPlan"></div>
+
+      <h3>Plan alimentaire</h3>
+      <img src="images/meal.webp" alt="Repas sain" class="section-img" />
+      <div id="mealPlan"></div>
+
+      <p class="muted small">⚠️ Ces calculs sont approximatifs et à titre indicatif uniquement.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year"></span> FitPlan — Tous droits réservés.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
