@@ -166,3 +166,29 @@ input, select {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-8px); }
 }
+.calories-summary {
+  background: #19191a;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 15px 0;
+}
+
+.calories-box {
+  background: rgb(30, 29, 29);
+
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #28a745;
+  margin-top: 10px;
+}
+
+.calories-box h4 {
+  color: #2c5530;
+  margin-bottom: 10px;
+}
+
+.highlight {
+  color: #dc3545;
+  font-weight: bold;
+  font-size: 1.1em;
+}
