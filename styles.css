@@ -1021,4 +1021,28 @@ input::placeholder {
     font-size: 1rem;
     min-height: 50px;
   }
+}/* STYLE POUR LE MESSAGE DE CONTACT */
+.contact-message {
+  color: #00ffb3;
+  font-weight: 600;
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  text-shadow: 0 0 10px rgba(0, 255, 179, 0.3);
+  animation: pulseContact 2s ease-in-out infinite;
+}
+
+@keyframes pulseContact {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+}
+
+.contact-message:hover {
+  color: #00d693;
+  text-shadow: 0 0 15px rgba(0, 255, 179, 0.5);
 }
