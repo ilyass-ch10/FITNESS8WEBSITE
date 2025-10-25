@@ -1,0 +1,155 @@
+// ANALYTIQUES ET STATISTIQUES
+class FitnessAnalytics {
+  constructor() {
+    this.userData = JSON.parse(localStorage.getItem('fitnessUsers')) || [];
+    this.workoutHistory = JSON.parse(localStorage.getItem('workoutHistory')) || [];
+  }
+
+  // Sauvegarder les données utilisateur
+  saveUserData(userData, plan) {
+    const userRecord = {
+      id: Date.now(),
+      timestamp: new Date().toISOString(),
+      ...userData,
+      plan: plan,
+      calories: calculateCalories(userData.weight, userData.height, userData.age, userData.sex, userData.goal, userData.sessions)
+    };
+    
+    this.userData.push(userRecord);
+    localStorage.setItem('fitnessUsers', JSON.stringify(this.userData));
+    
+    this.trackWorkoutCompletion(userData.sessions);
+  }
+
+  // Suivi de progression
+  trackWorkoutCompletion(sessions) {
+    const today = new Date().toDateString();
+    const existingEntry = this.workoutHistory.find(entry => entry.date === today);
+    
+    if (!existingEntry) {
+      this.workoutHistory.push({
+        date: today,
+        sessions: sessions,
+        completed: 0,
+        caloriesBurned: 0
+      });
+    }
+    
+    localStorage.setItem('workoutHistory', JSON.stringify(this.workoutHistory));
+  }
+
+  // Marquer une séance comme complétée
+  completeWorkout(dayIndex) {
+    const today = new Date().toDateString();
+    let entry = this.workoutHistory.find(entry => entry.date === today);
+    
+    if (entry) {
+      entry.completed++;
+      // Estimation des calories brûlées (approximative)
+      entry.caloriesBurned += 300;
+      localStorage.setItem('workoutHistory', JSON.stringify(this.workoutHistory));
+    }
+    
+    this.showCompletionMessage(dayIndex);
+  }
+
+  showCompletionMessage(dayIndex) {
+    const messages = [
+      "🎉 Super ! Jour 1 terminé !",
+      "🔥 Incroyable ! Jour 2 complété !", 
+      "💪 Tu es en feu ! Jour 3 fini !",
+      "🚀 Impressionnant ! Jour 4 achevé !",
+      "🌟 Excellent ! Jour 5 terminé !",
+      "🏆 Fantastique ! Jour 6 complété !",
+      "👑 Légendaire ! Semaine terminée !"
+    ];
+    
+    alert(messages[dayIndex] || "Séance complétée !");
+    this.updateProgressChart();
+  }
+
+  // Graphique de progression
+  updateProgressChart() {
+    const ctx = document.getElementById('progressChart');
+    if (!ctx) return;
+
+    const last7Days = this.getLast7DaysData();
+    
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: last7Days.map(day => day.date),
+        datasets: [{
+          label: 'Séances Complétées',
+          data: last7Days.map(day => day.completed),
+          borderColor: '#3498db',
+          backgroundColor: 'rgba(52, 152, 219, 0.1)',
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Votre Progression Hebdomadaire'
+          }
+        }
+      }
+    });
+  }
+
+  getLast7DaysData() {
+    const result = [];
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toDateString();
+      
+      const entry = this.workoutHistory.find(e => e.date === dateStr) || {
+        date: dateStr,
+        completed: 0,
+        caloriesBurned: 0
+      };
+      
+      result.push(entry);
+    }
+    return result;
+  }
+
+  // Statistiques utilisateur
+  getUserStats() {
+    const totalWorkouts = this.workoutHistory.reduce((sum, day) => sum + day.completed, 0);
+    const totalCalories = this.workoutHistory.reduce((sum, day) => sum + day.caloriesBurned, 0);
+    const currentStreak = this.calculateCurrentStreak();
+
+    return {
+      totalWorkouts,
+      totalCalories,
+      currentStreak,
+      avgSessionsPerWeek: (totalWorkouts / (this.workoutHistory.length / 7)).toFixed(1)
+    };
+  }
+
+  calculateCurrentStreak() {
+    let streak = 0;
+    let currentDate = new Date();
+    
+    while (true) {
+      const dateStr = currentDate.toDateString();
+      const dayEntry = this.workoutHistory.find(entry => entry.date === dateStr);
+      
+      if (dayEntry && dayEntry.completed > 0) {
+        streak++;
+        currentDate.setDate(currentDate.getDate() - 1);
+      } else {
+        break;
+      }
+    }
+    
+    return streak;
+  }
+}
+
+// Initialiser les analytiques
+const fitnessAnalytics = new FitnessAnalytics();

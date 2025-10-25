@@ -1,0 +1,120 @@
+// SYSTÈME DE NOTIFICATIONS
+class FitnessNotifications {
+  constructor() {
+    this.notifications = JSON.parse(localStorage.getItem('fitnessNotifications')) || [];
+    this.checkNotificationPermission();
+  }
+
+  // Demander la permission des notifications
+  async checkNotificationPermission() {
+    if ('Notification' in window) {
+      if (Notification.permission === 'default') {
+        await Notification.requestPermission();
+      }
+    }
+  }
+
+  // Planifier des rappels
+  scheduleWorkoutReminders() {
+    // Rappel quotidien à 8h du matin
+    const now = new Date();
+    const reminderTime = new Date();
+    reminderTime.setHours(20, 0, 0, 0); // 20:00
+
+    if (now > reminderTime) {
+      reminderTime.setDate(reminderTime.getDate() + 1);
+    }
+
+    const timeUntilReminder = reminderTime.getTime() - now.getTime();
+
+    setTimeout(() => {
+      this.showNotification("💪 Rappel d'entraînement", "N'oubliez pas votre séance d'aujourd'hui !");
+      this.scheduleWorkoutReminders(); // Répéter quotidiennement
+    }, timeUntilReminder);
+  }
+
+  // Notification navigateur
+  showNotification(title, message) {
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification(title, {
+        body: message,
+        icon: '/images/icon.png',
+        badge: '/images/badge.png'
+      });
+    }
+
+    // Notification in-app
+    this.createInAppNotification(title, message);
+  }
+
+  // Notification dans l'application
+  createInAppNotification(title, message) {
+    const notification = {
+      id: Date.now(),
+      title,
+      message,
+      timestamp: new Date(),
+      read: false
+    };
+
+    this.notifications.unshift(notification);
+    localStorage.setItem('fitnessNotifications', JSON.stringify(this.notifications));
+    
+    this.displayNotificationToast(notification);
+  }
+
+  // Toast notification
+  displayNotificationToast(notification) {
+    const toast = document.createElement('div');
+    toast.className = 'notification-toast';
+    toast.innerHTML = `
+      <div class="toast-header">
+        <strong>${notification.title}</strong>
+        <button class="toast-close">&times;</button>
+      </div>
+      <div class="toast-body">${notification.message}</div>
+    `;
+
+    toast.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      z-index: 10000;
+      max-width: 300px;
+      border-left: 4px solid #3498db;
+      animation: slideInRight 0.3s ease;
+    `;
+
+    document.body.appendChild(toast);
+
+    // Fermer automatiquement après 5 secondes
+    setTimeout(() => {
+      toast.remove();
+    }, 5000);
+
+    // Fermer manuellement
+    toast.querySelector('.toast-close').addEventListener('click', () => {
+      toast.remove();
+    });
+  }
+
+  // Marquer comme lu
+  markAsRead(notificationId) {
+    const notification = this.notifications.find(n => n.id === notificationId);
+    if (notification) {
+      notification.read = true;
+      localStorage.setItem('fitnessNotifications', JSON.stringify(this.notifications));
+    }
+  }
+
+  // Obtenir les notifications non lues
+  getUnreadCount() {
+    return this.notifications.filter(n => !n.read).length;
+  }
+}
+
+const fitnessNotifications = new FitnessNotifications();

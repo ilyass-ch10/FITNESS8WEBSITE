@@ -558,6 +558,80 @@ form.addEventListener('submit', (e) => {
     results.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 50);
 });
+// Ajouter ces lignes à la fin de votre script.js existant
 
+// MODIFIER la fonction form.addEventListener pour inclure la sauvegarde
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  
+  const userData = {
+    weight: parseFloat(document.getElementById('weight').value),
+    height: parseFloat(document.getElementById('height').value),
+    age: parseInt(document.getElementById('age').value),
+    sex: document.getElementById('sex').value,
+    goal: document.getElementById('goal').value,
+    sessions: parseInt(document.getElementById('sessions').value)
+  };
+
+  // ... (votre code existant pour calculer et afficher)
+
+  // SAUVEGARDER les données
+  saveManager.saveCurrentPlan(userData, workoutProgram, meals[goal]);
+  
+  // SUIVI ANALYTIQUES
+  fitnessAnalytics.saveUserData(userData, {
+    workout: workoutProgram,
+    meal: meals[goal],
+    calories: calculateCalories(userData.weight, userData.height, userData.age, userData.sex, userData.goal, userData.sessions)
+  });
+
+  // AFFICHER LES NOUVELLES SECTIONS
+  document.getElementById('progressSection').style.display = 'block';
+  document.getElementById('managementSection').style.display = 'block';
+  
+  // METTRE À JOUR LES STATISTIQUES
+  updateStatsDisplay();
+  
+  // PLANIFIER LES RAPPELS
+  fitnessNotifications.scheduleWorkoutReminders();
+});
+
+// Fonction pour mettre à jour l'affichage des stats
+function updateStatsDisplay() {
+  const stats = fitnessAnalytics.getUserStats();
+  
+  document.getElementById('totalWorkouts').textContent = stats.totalWorkouts;
+  document.getElementById('currentStreak').textContent = stats.currentStreak;
+  document.getElementById('caloriesBurned').textContent = stats.totalCalories;
+  
+  fitnessAnalytics.updateProgressChart();
+}
+
+// MODIFIER l'affichage des exercices pour ajouter le bouton de complétion
+// Dans la partie workoutPlan.innerHTML, modifier comme suit :
+workoutPlan.innerHTML = `
+  <div class="workout-plan">
+    ${filteredProgram.map((day, index) => `
+      <div class="workout-day">
+        <div class="workout-header">
+          <h3 class="workout-day-title">Jour ${index + 1} : ${day[0]}</h3>
+          <button class="completion-btn" onclick="fitnessAnalytics.completeWorkout(${index})" 
+                  data-translate="Mark Complete">✓ Terminer</button>
+        </div>
+        <ul class="exercise-list">
+          ${day[1].map(ex => `
+            <li class="exercise-item" data-exercise="${extractExerciseName(ex)}">
+              <span class="exercise-text">${ex}</span>
+              <button class="exercise-btn" title="Voir la démonstration">
+                <span class="exercise-icon">🖼️</span>
+                <span data-translate="See">Voir</span>
+              </button>
+            </li>
+          `).join('')}
+        </ul>
+      </div>
+    `).join('')}
+  </div>
+`;
 
 console.log("✅ FitPlan chargé avec filtrage automatique des exercices");

@@ -1,0 +1,142 @@
+// GESTIONNAIRE DE SAUVEGARDE
+class SaveManager {
+  constructor() {
+    this.currentPlan = null;
+    this.loadSavedPlan();
+  }
+
+  // Sauvegarder le plan actuel
+  saveCurrentPlan(userData, workoutPlan, mealPlan) {
+    const saveData = {
+      userData,
+      workoutPlan,
+      mealPlan,
+      timestamp: new Date().toISOString(),
+      version: '1.0'
+    };
+
+    this.currentPlan = saveData;
+    localStorage.setItem('currentFitnessPlan', JSON.stringify(saveData));
+    
+    // Sauvegarder dans l'historique
+    this.addToHistory(saveData);
+    
+    this.showSaveConfirmation();
+  }
+
+  // Charger le plan sauvegardé
+  loadSavedPlan() {
+    try {
+      const saved = localStorage.getItem('currentFitnessPlan');
+      if (saved) {
+        this.currentPlan = JSON.parse(saved);
+        return this.currentPlan;
+      }
+    } catch (error) {
+      console.error('Erreur lors du chargement:', error);
+    }
+    return null;
+  }
+
+  // Restaurer le plan sauvegardé
+  restoreSavedPlan() {
+    if (!this.currentPlan) return false;
+
+    const { userData, workoutPlan, mealPlan } = this.currentPlan;
+    
+    // Remplir le formulaire
+    document.getElementById('weight').value = userData.weight;
+    document.getElementById('height').value = userData.height;
+    document.getElementById('age').value = userData.age;
+    document.getElementById('sex').value = userData.sex;
+    document.getElementById('sessions').value = userData.sessions;
+    document.getElementById('goal').value = userData.goal;
+
+    // Afficher les résultats
+    setTimeout(() => {
+      document.getElementById('userForm').dispatchEvent(new Event('submit'));
+    }, 100);
+
+    return true;
+  }
+
+  // Historique des plans
+  addToHistory(plan) {
+    let history = JSON.parse(localStorage.getItem('planHistory')) || [];
+    
+    // Garder seulement les 10 derniers plans
+    history.unshift(plan);
+    history = history.slice(0, 10);
+    
+    localStorage.setItem('planHistory', JSON.stringify(history));
+  }
+
+  // Exporter les données
+  exportData() {
+    const data = {
+      currentPlan: this.currentPlan,
+      analytics: fitnessAnalytics.userData,
+      workoutHistory: fitnessAnalytics.workoutHistory,
+      exportDate: new Date().toISOString()
+    };
+
+    const dataStr = JSON.stringify(data, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(dataBlob);
+    link.download = `fitplan-backup-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+  }
+
+  // Importer des données
+  importData(file) {
+    const reader = new FileReader();
+    
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        
+        if (data.currentPlan) {
+          localStorage.setItem('currentFitnessPlan', JSON.stringify(data.currentPlan));
+        }
+        if (data.analytics) {
+          localStorage.setItem('fitnessUsers', JSON.stringify(data.analytics));
+        }
+        if (data.workoutHistory) {
+          localStorage.setItem('workoutHistory', JSON.stringify(data.workoutHistory));
+        }
+        
+        alert('Données importées avec succès !');
+        location.reload();
+      } catch (error) {
+        alert('Erreur lors de l\'importation des données.');
+      }
+    };
+    
+    reader.readAsText(file);
+  }
+
+  showSaveConfirmation() {
+    fitnessNotifications.createInAppNotification(
+      "💾 Plan Sauvegardé", 
+      "Votre programme a été sauvegardé avec succès."
+    );
+  }
+
+  // Synchronisation cloud (simulée)
+  async syncToCloud() {
+    // Simulation de synchronisation
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        fitnessNotifications.createInAppNotification(
+          "☁️ Synchronisation", 
+          "Vos données ont été synchronisées."
+        );
+        resolve(true);
+      }, 2000);
+    });
+  }
+}
+
+const saveManager = new SaveManager();

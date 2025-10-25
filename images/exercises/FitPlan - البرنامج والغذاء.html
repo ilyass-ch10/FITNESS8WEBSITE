@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)http://127.0.0.1:5500/index.html -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>FitPlan - البرنامج والغذاء</title>
+  <link rel="stylesheet" href="./FitPlan - البرنامج والغذاء_files/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="http://127.0.0.1:5500/index.html#" data-translate="logo">🏋️‍♂️ ils-fitness</a>
+      <p class="subtitle" data-translate="subtitle">Ton coach forme &amp; alimentation</p>
+    
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-text">
+      <h1 data-translate="transform">Transforme ton corps, un jour à la fois 💪</h1>
+      <p data-translate="heroText">Entre ton poids, ta taille et ton objectif pour recevoir ton plan d'entraînement et nutrition personnalisé.</p>
+    </div>
+    <img src="./FitPlan - البرنامج والغذاء_files/hero.jpg" alt="Fitness" class="hero-img">
+  </section>
+
+  <main class="container">
+    <section class="card">
+      <h2 data-translate="Enter your information">Entre tes informations</h2>
+      <form id="userForm">
+        <div class="row">
+          <label data-translate="Weight (kg)">Poids (kg)
+            <input type="number" id="weight" required="" min="20" max="300" step="0.1" placeholder="Ex : 70">
+          </label>
+          <label data-translate="Height (cm)">Taille (cm)
+            <input type="number" id="height" required="" min="90" max="250" step="0.1" placeholder="Ex : 175">
+          </label>
+        </div>
+
+        <div class="row">
+          <label data-translate="Age">Âge
+            <input type="number" id="age" required="" min="13" max="100" value="25">
+          </label>
+          <label data-translate="Gender">Sexe
+            <select id="sex">
+              <option value="male" data-translate="Male">Homme</option>
+              <option value="female" data-translate="Female">Femme</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="row">
+          <label data-translate="Workouts per week">Nombre d'entraînements / semaine
+            <input type="number" id="sessions" required="" min="1" max="7" value="3">
+          </label>
+          <label data-translate="Goal">Objectif
+            <select id="goal">
+              <option value="maintain" data-translate="Maintain">Maintenir</option>
+              <option value="lose" data-translate="Lose weight">Perdre du poids</option>
+              <option value="gain" data-translate="Gain muscle">Prendre du muscle</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn" data-translate="Calculate">Calculer</button>
+          <button type="reset" class="btn ghost" data-translate="Clear">Effacer</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- SECTION PROGRESSION (NOUVELLE) -->
+    <section class="card" id="progressSection" style="display: none;">
+      <h2 data-translate="Progress Tracking">Suivi de Progression</h2>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number" id="totalWorkouts">0</div>
+          <div class="stat-label" data-translate="Total Workouts">Séances Total</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="currentStreak">0</div>
+          <div class="stat-label" data-translate="Current Streak">Série Actuelle</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="caloriesBurned">0</div>
+          <div class="stat-label" data-translate="Calories Burned">Calories Brûlées</div>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <canvas id="progressChart"></canvas>
+      </div>
+    </section>
+
+    <!-- SECTION GESTION DES DONNÉES (NOUVELLE) -->
+    <section class="card" id="managementSection" style="display: none;">
+      <h2 data-translate="Data Management">Gestion des Données</h2>
+      
+      <div class="management-actions">
+        <button class="btn" onclick="saveManager.exportData()" data-translate="Export Data">
+          📤 Exporter Données
+        </button>
+        <button class="btn ghost" onclick="document.getElementById(&#39;importFile&#39;).click()" data-translate="Import Data">
+          📥 Importer Données
+        </button>
+        <button class="btn" onclick="saveManager.syncToCloud()" data-translate="Cloud Sync">
+          ☁️ Synchroniser
+        </button>
+        <button class="btn ghost" onclick="saveManager.restoreSavedPlan()" data-translate="Restore Plan">
+          🔄 Restaurer Plan
+        </button>
+      </div>
+      
+      <input type="file" id="importFile" accept=".json" style="display: none;" onchange="saveManager.importData(this.files[0])">
+    </section>
+
+    <section id="results" class="card show">
+      <h2 data-translate="Personalized Results">Résultats personnalisés</h2>
+      <div id="summary">
+    <div class="calories-summary">
+      <p><strong>Poids:</strong> 70 kg | <strong>Taille:</strong> 180 cm | <strong>IMC:</strong> 21.6</p>
+      <p><strong>Objectif:</strong> Prendre du muscle | <strong>Séances/semaine:</strong> 3</p>
+      <div class="calories-box">
+        <h4>📊 BESOINS CALORIQUES</h4>
+        <p><strong>Métabolisme de base:</strong> 1705 kcal/jour</p>
+        <p><strong>Maintenance:</strong> 2643 kcal/jour</p>
+        <p><strong>Objectif Prendre du muscle:</strong> <span class="highlight">2943 kcal/jour</span></p>
+        <p><strong>Protéines:</strong> 126g | <strong>Glucides:</strong> 368g | <strong>Lipides:</strong> 82g</p>
+      </div>
+    </div>
+  </div>
+
+      <h3 data-translate="Workout Program">Programme d'entraînement</h3>
+      <img src="./FitPlan - البرنامج والغذاء_files/workout.jpg" alt="Entraînement" class="section-img">
+      <div id="workoutPlan">
+      <div class="workout-plan">
+        
+          <div class="workout-day">
+            <h3 class="workout-day-title">Jour 1 : Push (Pec/Épaules/Triceps)</h3>
+            <ul class="exercise-list">
+              
+                <li class="exercise-item" data-exercise="Bench Press">
+                  <span class="exercise-text">Bench Press 4x12</span>
+                  <button class="exercise-btn" title="Voir la démonstration">
+                    <span class="exercise-icon">🖼️</span>
+                    Voir
+                  </button>
+                </li>
+              
+                <li class="exercise-item" data-exercise="Shoulder Press">
+                  <span class="exercise-text">Shoulder Press 3x12</span>
+                  <button class="exercise-btn" title="Voir la démonstration">
+                    <span class="exercise-icon">🖼️</span>
+                    Voir
+                  </button>
+                </li>
+              
+                <li class="exercise-item" data-exercise="Chest Fly">
+                  <span class="exercise-text">Chest Fly 3x15</span>
+                  <button class="exercise-btn" title="Voir la démonstration">
+                    <span class="exercise-icon">🖼️</span>
+                    Voir
+                  </button>
+                </li>
+              
+                <li class="exercise-item" data-exercise="Triceps Dips">
+                  <span class="exercise-text">Triceps Dips 3x12</span>
+                  <button class="exercise-btn" title="Voir la démonstration">
+                    <span class="exercise-icon">🖼️</span>
+                    Voir
+                  </button>
+                </li>
+              
+                <li class="exercise-item" data-exercise="Lateral Raises">
+                  <span class="exercise-text">Lateral Raises 3x15</span>
+                  <button class="exercise-btn" title="Voir la démonstration">
+                    <span class="exercise-icon">🖼️</span>
+                    Voir
+                  </button>
+                </li>
+              
+            </ul>
+          </div>
+        
+          <div class="workout-day">
+            <h3 class="workout-day-title">Jour 2 : Pull (Dos/Biceps)</h3>
+            <ul class="exercise-list">
+              
+                <li class="exercise-item" data-exercise="Pull-Ups">
+                  <span class="exercise-text">Pull-Ups 3x10</span>
+                  <button class="exercise-btn" title="Voir la démonstration">
+                    <span class="exercise-icon">🖼️</span>
+                    Voir
+                  </button>
+                </li>
+              
+                <li class="exercise-item" data-exercise="Rows">
+                  <span class="exercise-text">Rows 4x12</span>
+                  <button class="exercise-btn" title="Voir la démonstration">
+                    <span class="exercise-icon">🖼️</span>
+                    Voir
+                  </button>
+                </li>
+              
+                <li class="exercise-item" data-exercise="Lat Pulldown">
+                  <span class="exercise-text">Lat Pulldown 3x12</span>
+                  <button class="exercise-btn" title="Voir la démonstration">
+                    <span class="exercise-icon">🖼️</span>
+                    Voir
+                  </button>
+                </li>
+              
+                <li class="exercise-item" data-exercise="Biceps Curl">
+                  <span class="exercise-text">Biceps Curl 3x15</span>
+                  <button class="exercise-btn" title="Voir la démonstration">
+                    <span class="exercise-icon">🖼️</span>
+                    Voir
+                  </button>
+                </li>
+              
+                <li class="exercise-item" data-exercise="Face Pull">
+                  <span class="exercise-text">Face Pull 3x15</span>
+                  <button class="exercise-btn" title="Voir la démonstration">
+                    <span class="exercise-icon">🖼️</span>
+                    Voir
+                  </button>
+                </li>
+              
+            </ul>
+          </div>
+        
+          <div class="workout-day">
+            <h3 class="workout-day-title">Jour 3 : Legs (Jambes)</h3>
+            <ul class="exercise-list">
+              
+                <li class="exercise-item" data-exercise="Squats">
+                  <span class="exercise-text">Squats 4x15</span>
+                  <button class="exercise-btn" title="Voir la démonstration">
+                    <span class="exercise-icon">🖼️</span>
+                    Voir
+                  </button>
+                </li>
+              
+                <li class="exercise-item" data-exercise="Leg Press">
+                  <span class="exercise-text">Leg Press 4x12</span>
+                  <button class="exercise-btn" title="Voir la démonstration">
+                    <span class="exercise-icon">🖼️</span>
+                    Voir
+                  </button>
+                </li>
+              
+                <li class="exercise-item" data-exercise="Leg Curl">
+                  <span class="exercise-text">Leg Curl 3x15</span>
+                  <button class="exercise-btn" title="Voir la démonstration">
+                    <span class="exercise-icon">🖼️</span>
+                    Voir
+                  </button>
+                </li>
+              
+                <li class="exercise-item" data-exercise="Lunges">
+                  <span class="exercise-text">Lunges 3x15</span>
+                  <button class="exercise-btn" title="Voir la démonstration">
+                    <span class="exercise-icon">🖼️</span>
+                    Voir
+                  </button>
+                </li>
+              
+                <li class="exercise-item" data-exercise="Calf Raises">
+                  <span class="exercise-text">Calf Raises 4x20</span>
+                  <button class="exercise-btn" title="Voir la démonstration">
+                    <span class="exercise-icon">🖼️</span>
+                    Voir
+                  </button>
+                </li>
+              
+            </ul>
+          </div>
+        
+      </div>
+    </div>
+
+      <h3 data-translate="Meal Plan">Plan alimentaire</h3>
+      <img src="./FitPlan - البرنامج والغذاء_files/plan.jpg" alt="Repas sain" class="section-img">
+      <div id="mealPlan">
+    <div class="meal-plan-content">
+      <div class="meal-section">
+        <h3>🍳 Petit-déjeuner</h3>
+        <ul>
+          <li>Œufs (2-3)</li>
+          <li>Pain complet</li>
+          <li>Lait 250ml</li>
+          <li>Banane</li>
+        </ul>
+      </div>
+      <div class="meal-section">
+        <h3>🥛 Collation</h3>
+        <ul>
+          <li>Shaker protéiné</li>
+          <li>Amandes 20g</li>
+          <li>Fruit frais</li>
+        </ul>
+      </div>
+      <div class="meal-section">
+        <h3>🍗 Déjeuner</h3>
+        <ul>
+          <li>Poulet 150g</li>
+          <li>Riz complet 100g</li>
+          <li>Légumes vapeur</li>
+          <li>Huile d'olive</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+      <p class="muted small" data-translate="These calculations are approximate and for informational purposes only.">⚠️ Ces calculs sont approximatifs et à titre indicatif uniquement.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year">2025</span> ils-fitness — Tous droits réservés.</p>
+    </div>
+  </footer>
+
+  <!-- MODAL POUR LES EXERCICES -->
+  <div class="exercise-modal">
+    <div class="modal-content">
+      <button class="modal-close">×</button>
+      <h3 class="exercise-name-modal" id="modalExerciseName"></h3>
+      <div class="exercise-image-container">
+        <img class="exercise-image" id="modalExerciseImage" src="http://127.0.0.1:5500/index.html" alt="Exercise demonstration">
+      </div>
+      <p class="exercise-description" id="modalExerciseDescription"></p>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="./FitPlan - البرنامج والغذاء_files/chart.js.télécharger"></script>
+  
+  <script src="./FitPlan - البرنامج والغذاء_files/analytics.js.télécharger"></script>
+  <script src="./FitPlan - البرنامج والغذاء_files/notifications.js.télécharger"></script>
+  <script src="./FitPlan - البرنامج والغذاء_files/saveManager.js.télécharger"></script>
+  <script src="./FitPlan - البرنامج والغذاء_files/script.js.télécharger"></script><div class="exercise-modal">
+    <div class="modal-content">
+      <button class="modal-close">×</button>
+      <h3 class="exercise-name-modal" id="modalExerciseName"></h3>
+      <div class="exercise-image-container">
+        <img class="exercise-image" id="modalExerciseImage" src="http://127.0.0.1:5500/index.html" alt="Exercise demonstration">
+      </div>
+      <p class="exercise-description" id="modalExerciseDescription"></p>
+    </div>
+  </div>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+
+</body></html>
