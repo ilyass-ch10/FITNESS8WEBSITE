@@ -6,7 +6,7 @@ https://img.shields.io/badge/JavaScript-ES6-yellow
 https://img.shields.io/badge/Deployed-Netlify-success
 
 📖 Description
-FitPlan est un site web dynamique qui génère des programmes d'entraînement et plans alimentaires personnalisés selon vos objectifs fitness.
+ils_fitness est un site web dynamique qui génère des programmes d'entraînement et plans alimentaires personnalisés selon vos objectifs fitness.
 
 🚀 Fonctionnalités
 ✅ Calculateur de besoins caloriques (BMR + objectifs)

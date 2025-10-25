@@ -774,3 +774,251 @@ input::placeholder {
     font-size: 1rem;
   }
 }
+/* FOOTER COMPACT */
+.site-footer {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  padding: 1.5rem 0 0.8rem;
+  margin-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.footer-section h3 {
+  color: #00ffb3;
+  font-size: 1.1rem;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* LIENS COMPACTS */
+.social-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.7rem 1rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border-radius: 10px;
+  text-decoration: none;
+  color: #f9f8f8;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  font-size: 0.9rem;
+}
+
+.social-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 255, 179, 0.3);
+  border-color: #00ffb3;
+}
+
+.social-icon {
+  font-size: 1.2rem;
+  filter: drop-shadow(0 0 5px rgba(0, 255, 179, 0.5));
+  transition: transform 0.3s ease;
+}
+
+.social-link:hover .social-icon {
+  transform: scale(1.2);
+}
+
+.social-text {
+  font-weight: 500;
+  font-size: 0.85rem;
+  background: linear-gradient(45deg, #00ffb3, #ffffff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* STYLES SPÉCIFIQUES COMPACTS */
+.social-link.instagram {
+  border: 1px solid #E1306C;
+}
+
+.social-link.instagram:hover {
+  background: rgba(225, 48, 108, 0.1);
+}
+
+.social-link.github {
+  border: 1px solid #6e5494;
+}
+
+.social-link.github:hover {
+  background: rgba(110, 84, 148, 0.1);
+}
+
+.social-link.gmail {
+  border: 1px solid #EA4335;
+}
+
+.social-link.gmail:hover {
+  background: rgba(234, 67, 53, 0.1);
+}
+
+/* FOOTER BOTTOM COMPACT */
+.footer-bottom {
+  text-align: center;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.footer-bottom p {
+  margin: 0;
+}
+
+/* ANIMATIONS SIMPLIFIÉES */
+.social-link:nth-child(1) .social-icon {
+  animation: none;
+}
+
+.social-link:nth-child(2) .social-icon {
+  animation: none;
+}
+
+/* RESPONSIVE COMPACT */
+@media (max-width: 768px) {
+  .site-footer {
+    padding: 1rem 0 0.5rem;
+    margin-top: 1.5rem;
+  }
+  
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+  
+  .footer-section h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .social-link {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.85rem;
+  }
+  
+  .social-text {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .site-footer {
+    padding: 0.8rem 0 0.4rem;
+  }
+  
+  .footer-content {
+    gap: 0.6rem;
+  }
+  
+  .social-links {
+    gap: 0.3rem;
+  }
+  
+  .social-link {
+    padding: 0.5rem 0.7rem;
+  }
+}
+/* SECTION OUTILS */
+#toolsSection {
+  margin-top: 2rem;
+}
+
+.tips-container, .export-container {
+  margin-bottom: 2rem;
+}
+
+.tips-container h3, .export-container h3 {
+  color: #00ffb3;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* CARTE CONSEIL */
+.tip-card {
+  background: linear-gradient(135deg, rgba(0, 255, 179, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  padding: 1.5rem;
+  border-radius: 15px;
+  border: 1px solid rgba(0, 255, 179, 0.2);
+  backdrop-filter: blur(10px);
+  text-align: center;
+}
+
+.tip-card p {
+  font-size: 1.1rem;
+  color: #f9f8f8;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+  font-style: italic;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ACTIONS D'EXPORT */
+.export-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.export-actions .btn {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* ANIMATION POUR LES CONSEILS */
+@keyframes tipFade {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.tip-card p {
+  animation: tipFade 0.5s ease;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .export-actions {
+    flex-direction: column;
+  }
+  
+  .export-actions .btn {
+    min-width: auto;
+  }
+  
+  .tip-card {
+    padding: 1rem;
+  }
+  
+  .tip-card p {
+    font-size: 1rem;
+    min-height: 50px;
+  }
+}
